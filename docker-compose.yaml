@@ -17,7 +17,7 @@ services:
       dockerfile: web.docker
     working_dir: /var/www
     ports:
-      - 8080:80
+      - 9000:80
   db:
     image: mysql:5.7
     environment:
@@ -36,3 +36,4 @@ services:
       PMA_HOSTS: db
       PMA_USER: dbuser
       PMA_PASSWORD: user123
+
