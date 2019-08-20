@@ -1,23 +1,17 @@
-version: '3'
+version: '2'
 services:
-
-  # The Application
-  app:
-    build:
-      context: ./
-      dockerfile: app.docker
-    working_dir: /var/www
-    volumes:
-      - ./:/var/www/
-
-  # The Web Server
-  web:
-    build:
-      context: ./
-      dockerfile: web.docker
-    working_dir: /var/www
+  # container for API
+  api:
+    image: kun391/phpup:1.0
     ports:
       - 9000:80
+    depends_on:
+      - db
+    volumes:
+      - .:/var/www/app
+      - ./queue.conf:/etc/supervisor/conf.d/queue.conf
+    environment:
+      - PHP_MEM_LIMIT=1024M
   db:
     image: mysql:5.7
     environment:
@@ -27,13 +21,13 @@ services:
       MYSQL_PASSWORD: user123
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    restart: always
+    volumes:
+      - ./config.user.inc.php:/etc/phpmyadmin/config.inc.php
     ports:
-      - 9129:80
+      - 9029:80
     depends_on:
       - db
     environment:
       PMA_HOSTS: db
       PMA_USER: dbuser
       PMA_PASSWORD: user123
-
